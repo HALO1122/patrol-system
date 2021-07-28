@@ -5,8 +5,6 @@ Vue.use(Router)
 
 /* Layout */
 import Layout from '@/layout'
-
-/* Router Modules */
 import chartsRouter from './modules/charts'
 
 export const constantRoutes = [
@@ -37,11 +35,6 @@ export const constantRoutes = [
     hidden: true
   },
   {
-    path: '/401',
-    component: () => import('@/views/error-page/401'),
-    hidden: true
-  },
-  {
     path: '/',
     component: Layout,
     redirect: '/dashboard',
@@ -53,6 +46,11 @@ export const constantRoutes = [
         meta: { title: 'Dashboard', icon: 'dashboard', affix: true }
       }
     ]
+  },
+  {
+    path: '/list',
+    component: () => import('@/views/session/list'),
+    hidden: true
   }
 ]
 
@@ -102,10 +100,8 @@ export const asyncRoutes = [
       }
     ]
   },
-
   /** when your routing map is too long, you can split it into small modules **/
   chartsRouter,
-
   {
     path: '/error',
     component: Layout,
@@ -117,12 +113,6 @@ export const asyncRoutes = [
     },
     children: [
       {
-        path: '401',
-        component: () => import('@/views/error-page/401'),
-        name: 'Page401',
-        meta: { title: '401', noCache: true }
-      },
-      {
         path: '404',
         component: () => import('@/views/error-page/404'),
         name: 'Page404',
@@ -130,7 +120,6 @@ export const asyncRoutes = [
       }
     ]
   },
-
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
 ]
@@ -142,8 +131,6 @@ const createRouter = () => new Router({
 })
 
 const router = createRouter()
-
-// Detail see: https://github.com/vuejs/vue-router/issues/1234#issuecomment-357941465
 export function resetRouter() {
   const newRouter = createRouter()
   router.matcher = newRouter.matcher // reset router

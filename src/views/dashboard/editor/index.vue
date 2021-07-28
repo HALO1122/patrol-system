@@ -33,6 +33,9 @@ export default {
       'avatar',
       'roles'
     ])
+  },
+  components: {
+    PanThumb
   }
 }
 </script>

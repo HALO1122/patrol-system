@@ -4,9 +4,11 @@
 @import './element-ui.scss';
 @import './sidebar.scss';
 @import './btn.scss';
+@import './_icon.scss';
 
 body {
   height: 100%;
+  margin: 0;
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
@@ -57,33 +59,56 @@ div:focus {
   outline: none;
 }
 
-.fr {
-  float: right;
-}
+.txt-14{ font-size: 14px; }
+.txt-16{ font-size: 16px; }
+.txt-18{ font-size: 18px; }
+.txt-24{ font-size: 24px; }
+.txt-bold{ font-weight: bold; }
+.block { display: block; }
+.pointer { cursor: pointer; }
+.fr { float: right; }
+.fl {float: left; }
+.wid100{ width: 100%; }
 
-.fl {
-  float: left;
-}
+.pr5 { padding-right: 5px; }
+.pl5 { padding-left: 5px; }
+.pt5 { padding-top: 5px; }
+.pb5 { padding-bottom: 5px; }
 
-.pr-5 {
-  padding-right: 5px;
-}
+.pr10 { padding-right: 10px; }
+.pl10 { padding-left: 10px; }
+.pt10 { padding-top: 10px; }
+.pb10 { padding-bottom: 10px; }
 
-.pl-5 {
-  padding-left: 5px;
-}
+.pr20 { padding-right: 20px; }
+.pl20 { padding-left: 20px; }
+.pt20 { padding-top: 20px; }
+.pb20 { padding-bottom: 20px; }
 
-.block {
-  display: block;
-}
+.pr50 { padding-right: 50px; }
+.pl50 { padding-left: 50px; }
+.pt50 { padding-top: 50px; }
+.pb50 { padding-bottom: 50px; }
 
-.pointer {
-  cursor: pointer;
-}
+.mr5 { margin-right: 5px; }
+.ml5 { margin-left: 5px; }
+.mt5 { margin-top: 5px; }
+.mb5 { margin-bottom: 5px; }
 
-.inlineBlock {
-  display: block;
-}
+.mr10 { margin-right: 10px; }
+.ml10 { margin-left: 10px; }
+.mt10 { margin-top: 10px; }
+.mb10 { margin-bottom: 10px; }
+
+.mr20 { margin-right: 20px; }
+.ml20 { margin-left: 20px; }
+.mt20 { margin-top: 20px; }
+.mb20 { margin-bottom: 20px; }
+
+.mr50 { margin-right: 50px; }
+.ml50 { margin-left: 50px; }
+.mt50 { margin-top: 50px; }
+.mb50 { margin-bottom: 50px; }
 
 .clearfix {
   &:after {
@@ -124,68 +149,10 @@ aside {
   padding: 20px;
 }
 
-.components-container {
-  margin: 30px 50px;
-  position: relative;
-}
-
 .pagination-container {
   margin-top: 30px;
 }
 
 .text-center {
   text-align: center
-}
-
-.sub-navbar {
-  height: 50px;
-  line-height: 50px;
-  position: relative;
-  width: 100%;
-  text-align: right;
-  padding-right: 20px;
-  transition: 600ms ease position;
-  background: linear-gradient(90deg, rgba(32, 182, 249, 1) 0%, rgba(32, 182, 249, 1) 0%, rgba(33, 120, 241, 1) 100%, rgba(33, 120, 241, 1) 100%);
-
-  .subtitle {
-    font-size: 20px;
-    color: #fff;
-  }
-
-  &.draft {
-    background: #d0d0d0;
-  }
-
-  &.deleted {
-    background: #d0d0d0;
-  }
-}
-
-.link-type,
-.link-type:focus {
-  color: #337ab7;
-  cursor: pointer;
-
-  &:hover {
-    color: rgb(32, 160, 255);
-  }
-}
-
-.filter-container {
-  padding-bottom: 10px;
-
-  .filter-item {
-    display: inline-block;
-    vertical-align: middle;
-    margin-bottom: 10px;
-  }
-}
-
-//refine vue-multiselect plugin
-.multiselect {
-  line-height: 16px;
-}
-
-.multiselect--active {
-  z-index: 1000 !important;
 }
