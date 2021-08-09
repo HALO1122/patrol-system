@@ -9,6 +9,7 @@
       <div style="padding-top:35px;" class="progress-item">
         <span>Vue</span>
         <el-progress :percentage="70" />
+        <el-progress :percentage="100" />
       </div>
       <div class="progress-item">
         <span>JavaScript</span>

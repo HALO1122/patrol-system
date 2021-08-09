@@ -51,6 +51,11 @@ export const constantRoutes = [
     path: '/list',
     component: () => import('@/views/session/list'),
     hidden: true
+  },
+  {
+    path: '/monitor',
+    component: () => import('@/views/monitor/index'),
+    hidden: true
   }
 ]
 

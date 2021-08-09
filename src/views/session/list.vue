@@ -89,8 +89,7 @@ export default {
       this.$router.push(`/login?redirect=${this.$route.fullPath}`)
     },
     enterMonitor() {
-      console.log('***')
-      this.$router.push(`/`)
+      this.$router.push(`/monitor`)
     }
   }
 }
