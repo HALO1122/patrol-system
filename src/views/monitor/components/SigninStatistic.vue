@@ -1,6 +1,9 @@
 <template>
   <div class="signin mt10">
-    <p>分班监考情况</p>
+    <div class="warp-title">
+      <span class="icon-border"><i class="ez-icon">&#xe698;</i></span>
+      <span class="ml10">分班监考情况</span>
+    </div>
     <div class="wrap-chart mt20">
       <!-- 签到率 -->
       <div class="chart-content">

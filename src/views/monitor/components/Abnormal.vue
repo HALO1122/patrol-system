@@ -1,6 +1,9 @@
 <template>
   <div class="abnormal">
-    <p>重点异常警报</p>
+    <div class="warp-title">
+      <span class="icon-border"><i class="ez-icon">&#xe694;</i></span>
+      <span class="ml10">重点异常警报</span>
+    </div>
     <div id="abnormal" :style="{height:height,width:width}" />
   </div>
 </template>

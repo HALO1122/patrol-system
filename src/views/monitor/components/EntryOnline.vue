@@ -1,6 +1,9 @@
 <template>
-  <div class="entry-online mt10">
-    <p>在线人数分析</p>
+  <div class="entry-online">
+    <div class="warp-title">
+      <span class="icon-border"><i class="ez-icon">&#xe696;</i></span>
+      <span class="ml10">在线人数分析</span>
+    </div>
     <div :id="id" :style="{height:height,width:width}" />
   </div>
 </template>

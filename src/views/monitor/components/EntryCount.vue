@@ -1,18 +1,21 @@
 <template>
   <div class="entry-count mt10">
-    <p>考生状态统计</p>
+    <div class="warp-title">
+      <span class="icon-border"><i class="ez-icon">&#xe693;</i></span>
+      <span class="ml10">考生状态统计</span>
+    </div>
     <div id="countChart" :style="{height:height,width:width}" />
     <div class="enrty-status-count">
       <ul>
         <li>
-          <img src="../../../assets/images/status1.png" alt="status1" width="52px" height="52px">
+          <img src="../../../assets/images/status1.png" alt="status1" width="46px" height="52px">
           <div class="ml5 mt10 ">
             <p class="txt-18">12,245</p>
             <p class="name">在线考生</p>
           </div>
         </li>
         <li>
-          <img src="../../../assets/images/status1.png" alt="status1" width="52px" height="52px">
+          <img src="../../../assets/images/status2.png" alt="status1" width="46px" height="52px">
           <div class="ml5 mt10 ">
             <p class="txt-18">1</p>
             <p class="name">未开考考生</p>
@@ -21,14 +24,14 @@
       </ul>
       <ul>
         <li>
-          <img src="../../../assets/images/status1.png" alt="status1" width="52px" height="52px">
+          <img src="../../../assets/images/status3.png" alt="status1" width="46px" height="52px">
           <div class="ml5 mt10 ">
             <p class="txt-18">12,245</p>
             <p class="name">完成考生</p>
           </div>
         </li>
         <li>
-          <img src="../../../assets/images/status1.png" alt="status1" width="52px" height="52px">
+          <img src="../../../assets/images/status4.png" alt="status1" width="46px" height="52px">
           <div class="ml5 mt10 ">
             <p class="txt-18">80.3%</p>
             <p class="name">参考率</p>
@@ -116,6 +119,7 @@ $tag-color: #3682FF;
   .enrty-status-count{
     ul{
       display: flex;
+      justify-content: space-around;
       margin: 16px 0px;
       li {
         display: flex;
