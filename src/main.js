@@ -7,7 +7,7 @@ import Element from 'element-ui'
 import './styles/element-variables.scss'
 
 import '@/styles/index.scss' // global css
-import './permission' // permission control
+// import './permission' // permission control
 import './utils/error-log' // error log
 
 import * as filters from './filters' // global filters
