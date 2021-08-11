@@ -21,7 +21,14 @@ export default {
   props: ['userJson'],
   data() {
     return {
-      chart: null
+      chart: null,
+      geoCoordMap: {
+        '辽宁省': [121.62, 38.92],
+        '海南省': [109.511909, 18.252847],
+        '湖南省': [110.479191, 29.117096],
+        '江苏省': [120.29, 31.59],
+        '河南省': [114.35, 34.79]
+      }
     }
   },
   mounted() {
@@ -35,6 +42,20 @@ export default {
     this.chart = null
   },
   methods: {
+    convertData(data) {
+      var res = []
+      for (var i = 0; i < data.length; i++) {
+        var geoCoord = this.geoCoordMap[data[i].name]
+        if (geoCoord) {
+          res.push({
+            name: data[i].name,
+            value: geoCoord.concat(data[i].value)
+          })
+        }
+      }
+      console.log(res, 'res')
+      return res
+    },
     chinaConfigure() {
       const chinaMap = echarts.init(this.$refs.chinaMap)
       window.onresize = chinaMap.resize
@@ -47,7 +68,7 @@ export default {
           text: ['High', 'Low'],
           realtime: true,
           calculable: true,
-          color: ['orangered', 'yellow', 'lightskyblue']
+          color: ['#02F6F9', '#02F6F9', '#02F6F9']
         },
         geo: {
           map: 'china',
@@ -81,11 +102,11 @@ export default {
         },
         series: [
           {
-            type: 'map',
+            type: 'scatter',
             coordinateSystem: 'geo',
-            roam: true,
-            aspectScale: 0.75,
-            zoom: 1.2,
+            symbolSize: function(val) {
+              return val[2] / 10
+            },
             label: {
               normal: {
                 formatter: '{b}',
@@ -102,25 +123,14 @@ export default {
                 color: '#fff'
               }
             },
-            data: [{
-              'name': '北京',
-              'value': 120
-            }, {
-              'name': '上海',
-              'value': 142
-            }, {
-              'name': '黑龙江',
-              'value': 44
-            }, {
-              'name': '深圳',
-              'value': 92
-            }, {
-              'name': '湖北',
-              'value': 810
-            }, {
-              'name': '四川',
-              'value': 453
-            }]
+            data: this.convertData([
+              { name: '河南省', value: 110 },
+              { name: '江苏省', value: 110 },
+              { name: '海南省', value: 110 },
+              { name: '辽宁省', value: 210 },
+              { name: '湖南省', value: 210 },
+              { name: '新疆', value: 210 }
+            ])
           }]
       })
     }
@@ -140,16 +150,16 @@ $tag-color: #3682FF;
   .city-list{
     float: left;
     border: 1px solid $tag-color;
-    height: 400px;
+    height: 500px;
   }
   .wrap-map{
     float: right;
-    width: 60%;
-    height: 400px;
+    width: 70%;
+    height: 500px;
     // border: 1px dashed #888888;
     .chart-map{
       width: 100%;
-      height: 396px;
+      height: 496px;
       div{
         width: 100%;
         height: 100%;

@@ -7,7 +7,7 @@ function resolve(dir) {
 }
 
 const name = defaultSettings.title || '巡考系统' // page title
-const port = process.env.port || process.env.npm_config_port || 9527 // dev port
+const port = process.env.port || process.env.npm_config_port || 8080 // dev port
 
 // All configuration item explanations can be find in https://cli.vuejs.org/config/
 module.exports = {
@@ -18,13 +18,15 @@ module.exports = {
       warnings: false,
       errors: true
     },
-    before: require('./mock/mock-server.js')
-    // proxy: "http://172.16.21.35:8001/"
-    // proxy: {
-    //     '/data': {
-    //       target: process.env.BACKEND_URL
-    //     }
-    // }
+    proxy: {
+      [process.env.VUE_APP_BASE_API]: {
+        target: 'http://172.16.21.35:8001/',
+        changeOrigin: true,
+        pathRewrite: {
+          ['^' + process.env.VUE_APP_BASE_API]: ''
+        }
+      }
+    }
   },
   // 基本路径
   publicPath: process.env.NODE_ENV === 'production' ? process.env.BACKEND_URL : '/',
@@ -36,6 +38,8 @@ module.exports = {
   indexPath: "index.html",
   // 文件名哈希
   filenameHashing: false,
+  // 生成环境禁用eslint-loader
+  lintOnSave: false,
 
   productionSourceMap: false,
   configureWebpack: {

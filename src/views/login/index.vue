@@ -1,18 +1,18 @@
 <template>
   <div class="login-container">
-    <el-form ref="loginForm" :model="loginForm" class="login-form" autocomplete="on" label-position="left">
+    <el-form :model="loginForm" class="login-form" autocomplete="on" label-position="left">
       <div class="title-container">
         <h3 class="title">巡考系统</h3>
       </div>
 
       <span class="form-title pb10">巡考平台登录</span>
-      <el-form-item prop="username" class="mt50">
+      <el-form-item prop="name" class="mt50">
         <span class="svg-container"><i class="ez-icon">&#xe677;</i></span>
         <el-input
-          ref="username"
-          v-model="loginForm.username"
+          ref="name"
+          v-model="loginForm.name"
           placeholder="登录账号"
-          name="username"
+          name="name"
           type="text"
           tabindex="1"
           autocomplete="on"
@@ -37,7 +37,7 @@
         </el-form-item>
       </el-tooltip>
 
-      <el-button :loading="loading" type="primary" class="wid100 mt20" @click.native.prevent="handleLogin">Login</el-button>
+      <el-button :loading="loading" type="primary" class="wid100 mt20" @click.native.prevent="handleLogin">登录</el-button>
     </el-form>
     <div class="footer">
       <p>租户的机构名称</p>
@@ -47,36 +47,22 @@
 </template>
 
 <script>
-
+import { PatrolLogin } from '@/utils/api'
 export default {
   name: 'Login',
   data() {
     return {
       loginForm: {
-        username: 'admin',
-        password: '111111'
+        name: 'haloyxx@163.com',
+        password: 'aaaa'
       },
       capsTooltip: false,
-      loading: false,
-      redirect: undefined,
-      otherQuery: {}
-    }
-  },
-  watch: {
-    $route: {
-      handler: function(route) {
-        const query = route.query
-        if (query) {
-          this.redirect = query.redirect
-          this.otherQuery = this.getOtherQuery(query)
-        }
-      },
-      immediate: true
+      loading: false
     }
   },
   mounted() {
-    if (this.loginForm.username === '') {
-      this.$refs.username.focus()
+    if (this.loginForm.name === '') {
+      this.$refs.name.focus()
     } else if (this.loginForm.password === '') {
       this.$refs.password.focus()
     }
@@ -87,31 +73,16 @@ export default {
       this.capsTooltip = key && key.length === 1 && (key >= 'A' && key <= 'Z')
     },
     handleLogin() {
-      this.$refs.loginForm.validate(valid => {
-        if (valid) {
-          this.loading = true
-          this.$store.dispatch('user/login', this.loginForm)
-            .then(() => {
-              // this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
-              this.$router.push(`/list`)
-              this.loading = false
-            })
-            .catch(() => {
-              this.loading = false
-            })
-        } else {
-          console.log('error submit!!')
-          return false
-        }
+      const data = this.loginForm
+      this.loading = true
+      PatrolLogin(data).then(res => {
+        this.$store.commit('SET_TOKEN', res.token)
+        this.$router.push(`/list`)
+        this.loading = false
+      }).catch(() => {
+        this.loading = false
+        return false
       })
-    },
-    getOtherQuery(query) {
-      return Object.keys(query).reduce((acc, cur) => {
-        if (cur !== 'redirect') {
-          acc[cur] = query[cur]
-        }
-        return acc
-      }, {})
     }
   }
 }
@@ -189,6 +160,8 @@ $theme-color: #166EFF;
 
   .title-container {
     position: relative;
+    background: url(/img/logo.png) no-repeat 124px 0px;
+    background-size: contain;
     .title {
       font-size: 26px;
       color: $light_gray;
