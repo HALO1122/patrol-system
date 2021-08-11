@@ -49,13 +49,14 @@ export default {
       statisticsData: {
         article_count: 1024,
         pageviews_count: 1024
-      }
+      },
+      avatar: ''
+
     }
   },
   computed: {
     ...mapGetters([
       'name',
-      'avatar',
       'roles'
     ])
   }
