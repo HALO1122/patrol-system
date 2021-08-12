@@ -6,12 +6,13 @@
         <el-col :span="6">
           <div class="wrap-content">
             <entry-online />
-            <entry-count />
+            <entry-status />
           </div>
         </el-col>
         <el-col :span="12">
           <div class="wrap-content">
             <map-statistic />
+            <entry-monitor />
           </div>
         </el-col>
         <el-col :span="6">
@@ -27,13 +28,15 @@
 
 <script>
 import EntryOnline from './components/EntryOnline'
-import EntryCount from './components/EntryCount'
+import EntryStatus from './components/EntryStatus'
+import EntryMonitor from './components/EntryMonitor'
 import Abnormal from './components/Abnormal'
 import SigninStatistic from './components/SigninStatistic'
 import MapStatistic from './components/MapStatistic'
 export default {
   name: 'LineChart',
-  components: { EntryOnline, EntryCount, Abnormal, SigninStatistic, MapStatistic }
+  components: { EntryOnline, EntryStatus, Abnormal,
+    SigninStatistic, MapStatistic, EntryMonitor }
 }
 </script>
 

@@ -7,33 +7,33 @@
     <div id="countChart" :style="{height:height,width:width}" />
     <div class="enrty-status-count">
       <ul>
-        <li>
+        <li class="ml20">
           <img src="../../../assets/images/status1.png" alt="status1" width="46px" height="52px">
           <div class="ml5 mt10 ">
-            <p class="txt-18">12,245</p>
+            <p class="txt-18">{{ count.online_number }}</p>
             <p class="name">在线考生</p>
           </div>
         </li>
         <li>
           <img src="../../../assets/images/status2.png" alt="status1" width="46px" height="52px">
           <div class="ml5 mt10 ">
-            <p class="txt-18">1</p>
+            <p class="txt-18">{{ count.no_login_number }}</p>
             <p class="name">未开考考生</p>
           </div>
         </li>
       </ul>
       <ul>
-        <li>
+        <li class="ml20">
           <img src="../../../assets/images/status3.png" alt="status1" width="46px" height="52px">
           <div class="ml5 mt10 ">
-            <p class="txt-18">12,245</p>
+            <p class="txt-18">{{ count.achieve_number }}</p>
             <p class="name">完成考生</p>
           </div>
         </li>
         <li>
           <img src="../../../assets/images/status4.png" alt="status1" width="46px" height="52px">
           <div class="ml5 mt10 ">
-            <p class="txt-18">80.3%</p>
+            <p class="txt-18">{{ openRate }}</p>
             <p class="name">参考率</p>
           </div>
         </li>
@@ -45,7 +45,7 @@
 <script>
 import echarts from 'echarts'
 import resize from './mixins/resize'
-
+import { EntryStatus } from '@/utils/api'
 export default {
   mixins: [resize],
   props: {
@@ -60,11 +60,20 @@ export default {
   },
   data() {
     return {
-      chart: null
+      chart: null,
+      count: ''
+    }
+  },
+  computed: {
+    openRate() {
+      return (this.count.login_percent * 100) + '%'
+    },
+    unopenRate() {
+      return (this.count.no_login_percent * 100) + '%'
     }
   },
   mounted() {
-    this.initChart()
+    this.getEntryStatus()
   },
   beforeDestroy() {
     if (!this.chart) {
@@ -73,10 +82,16 @@ export default {
     this.chart.dispose()
     this.chart = null
   },
+  created() {
+  },
   methods: {
-    initChart() {
+    async getEntryStatus() {
+      const res = await EntryStatus()
+      this.initChart(res)
+      this.count = res
+    },
+    initChart(res) {
       this.chart = echarts.init(document.getElementById('countChart'))
-
       this.chart.setOption({
         backgroundColor: '#061748',
         tooltip: {
@@ -86,7 +101,7 @@ export default {
           {
             name: '考生状态统计',
             type: 'pie',
-            radius: ['40%', '70%'],
+            radius: ['40%', '80%'],
             avoidLabelOverlap: false,
             label: {
               alignTo: 'edge',
@@ -95,8 +110,8 @@ export default {
               lineHeight: 15
             },
             data: [
-              { value: 1048, name: '开考', itemStyle: { color: '#02F6F9' }},
-              { value: 735, name: '未开考', itemStyle: { color: '#3682FF' }}
+              { value: res.online_number + res.achieve_number, name: '开考', itemStyle: { color: '#02F6F9' }},
+              { value: res.no_login_number, name: '未开考', itemStyle: { color: '#3682FF' }}
             ]
           }
         ]
@@ -119,10 +134,10 @@ $tag-color: #3682FF;
   .enrty-status-count{
     ul{
       display: flex;
-      justify-content: space-around;
       margin: 16px 0px;
       li {
         display: flex;
+        flex: 1;
         padding: 5px 12px;
         p{ margin: 0; }
         .name{

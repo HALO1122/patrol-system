@@ -11,7 +11,8 @@
 <script>
 import echarts from 'echarts'
 import resize from './mixins/resize'
-
+import { EntryOnline } from '@/utils/api'
+import { parseTime } from '@/utils/index'
 export default {
   mixins: [resize],
   props: {
@@ -30,11 +31,14 @@ export default {
   },
   data() {
     return {
-      chart: null
+      chart: null,
+      online: '',
+      timeList: [],
+      numList: []
     }
   },
   mounted() {
-    this.initChart()
+    this.getEntryOnline()
   },
   beforeDestroy() {
     if (!this.chart) {
@@ -44,14 +48,20 @@ export default {
     this.chart = null
   },
   methods: {
-    initChart() {
+    async getEntryOnline() {
+      const res = await EntryOnline()
+      this.initChart(res)
+      this.online = res
+    },
+    initChart(res) {
+      this.handelOnlineList(res.online_list)
       this.chart = echarts.init(document.getElementById(this.id))
 
       this.chart.setOption({
         backgroundColor: '#061748',
         title: {
           top: 20,
-          text: '当前已开考55人',
+          text: '当前已开考' + res.login_number + '人',
           textStyle: {
             fontWeight: 'normal',
             fontSize: 20,
@@ -82,7 +92,7 @@ export default {
               color: '#1A418E'
             }
           },
-          data: ['13:00', '13:05', '13:10', '13:15', '13:20', '13:25', '13:30', '13:35', '13:40', '13:45', '13:50', '13:55']
+          data: this.timeList
         }],
         yAxis: [{
           type: 'value',
@@ -139,8 +149,14 @@ export default {
               borderWidth: 8
             }
           },
-          data: [220, 182, 125, 145, 122, 191, 134, 150, 120, 110, 165, 122]
+          data: this.numList
         }]
+      })
+    },
+    handelOnlineList(data) {
+      data.map(item => {
+        this.timeList.push(parseTime(item.time, '{h}:{i}'))
+        this.numList.push(item.online)
       })
     }
   }

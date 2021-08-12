@@ -12,7 +12,7 @@ service.interceptors.request.use(
   config => {
     const token = store.getters.token
     if (token) {
-      config.headers['AUTHORIZATION-PATROL'] = token
+      config.headers['AUTHORIZATION-PATROL'] = 'Token ' + token
     }
     return config
   },
@@ -26,7 +26,6 @@ service.interceptors.request.use(
 service.interceptors.response.use(
   response => {
     const res = response
-
     if (res.status !== 200) {
       Message({
         message: res.message || 'Error',
@@ -40,9 +39,9 @@ service.interceptors.response.use(
     }
   },
   error => {
-    console.log('err' + error) // for debug
+    console.log('err', error) // for debug
     Message({
-      message: error.message,
+      message: error,
       type: 'error',
       duration: 5 * 1000
     })
