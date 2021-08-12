@@ -41,3 +41,19 @@ export function EntryMonitor() {
   })
 }
 
+// 异常警报
+export function abnormalType() {
+  return request({
+    url: '/patrol/session/' + sessionId + '/monitor_type/',
+    method: 'get'
+  })
+}
+
+// 监考统计
+export function teacherInfo() {
+  return request({
+    url: '/patrol/session/' + sessionId + '/teacher_info/',
+    method: 'get'
+  })
+}
+

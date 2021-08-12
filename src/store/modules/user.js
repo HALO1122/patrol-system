@@ -1,7 +1,7 @@
 const state = {
   token: '',
   name: '',
-  roles: []
+  scoket: ''
 }
 
 const mutations = {
@@ -11,14 +11,17 @@ const mutations = {
   SET_NAME: (state, name) => {
     state.name = name
   },
-  SET_ROLES: (state, roles) => {
-    state.roles = roles
+  SET_SOCKET: (state, scoket) => {
+    state.scoket = scoket
   }
 }
 
 const actions = {
   token({ commit }, token) {
     commit('SET_TOKEN', token)
+  },
+  scoket({ commit }, scoket) {
+    commit('SET_SOCKET', scoket)
   }
 }
 

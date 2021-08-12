@@ -5,17 +5,25 @@
       <span class="ml10">实时考生监控画面</span>
     </div>
     <div class="wrap-content">
-      <div v-for="item in monitorData" :key="item.socket_id" class="warp-video" />
+      <div v-if="monitorData.length == 0" class="wrap-tip">暂无考生在线！</div>
+      <div v-for="(item, index) in monitorData" v-else :key="index" class="warp-video">
+        <single-entry :single-item="item" />
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 import { EntryMonitor } from '@/utils/api'
+import singleEntry from './singleEntry.vue'
+
 export default {
+  components: { singleEntry },
   data() {
     return {
-      monitorData: []
+      monitorData: [],
+      isVideo: false,
+      peers: {}
     }
   },
   mounted() {
@@ -26,8 +34,8 @@ export default {
       const res = await EntryMonitor()
       this.monitorData = res.result
       console.log(res, 'res')
+      console.log(this.$socket, '**')
     }
-    // console.log('buzhdiaonizaiganshanembuzhdiaonadoa)
   }
 }
 </script>
@@ -43,13 +51,19 @@ $tag-color: #3682FF;
   background-color: $bg-color;
   padding: 10px 20px;
   .wrap-content{
+    .wrap-tip{
+      margin: 0 auto;
+      padding-top: 30px;
+      color: #02F6F9;
+    }
     display: flex;
     justify-content: space-between;
+    width: 100%;
     height: 100%;
     .warp-video{
-      width: 240px;
-      height: 160px;
-      border: 1px solid #fff;
+      width: 32%;
+      height: 208px;
+      // border: 1px solid #3169CC;
     }
   }
 }

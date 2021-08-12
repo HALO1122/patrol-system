@@ -48,6 +48,7 @@
 
 <script>
 import { PatrolLogin } from '@/utils/api'
+// import { openSocket } from '@/utils/connecSocket'
 export default {
   name: 'Login',
   data() {
@@ -77,6 +78,7 @@ export default {
       this.loading = true
       PatrolLogin(data).then(res => {
         this.$store.commit('SET_TOKEN', res.token)
+        this.$store.commit('SET_SOCKET', res.peer_setting.singal_server)
         this.$router.push(`/list`)
         this.loading = false
       }).catch(() => {

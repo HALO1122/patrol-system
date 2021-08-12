@@ -35,7 +35,7 @@
           </div>
         </div>
         <div class="chart-tag mt20">
-          <p class="percentage">50/100</p>
+          <p class="percentage">{{ teacherData.login }}/{{ teacherData.all }}位</p>
           <p class="name">监考已签到</p>
         </div>
       </div>
@@ -69,7 +69,7 @@
           </div>
         </div>
         <div class="chart-tag mt20">
-          <p class="percentage">50/100</p>
+          <p class="percentage">{{ teacherData.finish }}/{{ teacherData.all }}位</p>
           <p class="name">监考已结束</p>
         </div>
       </div>
@@ -79,18 +79,28 @@
 </template>
 
 <script>
+import { teacherInfo } from '@/utils/api'
 export default {
   name: 'Statistic',
   data() {
     return {
-      endPercentage: 10,
-      percentage: 65,
       strokeWidth: 6,
       width: 126,
-      rate: 1
+      rate: 1,
+      teacherData: {
+        all: 0,
+        finish: 0,
+        login: 0
+      }
     }
   },
   computed: {
+    percentage() {
+      return this.teacherData.login / this.teacherData.all * 100
+    },
+    endPercentage() {
+      return this.teacherData.finish / this.teacherData.all * 100
+    },
     relativeStrokeWidth() {
       return (this.strokeWidth / this.width * 100).toFixed(1)
     },
@@ -135,9 +145,14 @@ export default {
       }
     }
   },
-
+  mounted() {
+    this.getTeacherInfo()
+  },
   methods: {
-
+    async getTeacherInfo() {
+      const res = await teacherInfo()
+      this.teacherData = res
+    }
   }
 }
 </script>
@@ -162,6 +177,7 @@ p{ margin: 5px 0px; }
 }
 .signin{
   width: 100%;
+  height: 40%;
   padding: 10px 20px;
   border: 1px solid #257098;
   box-shadow: inset 0px 0px 6px rgba(34, 124, 171, 0.8);
@@ -169,6 +185,7 @@ p{ margin: 5px 0px; }
   .wrap-chart{
     display: flex;
     justify-content: center;
+    padding-top: 15px;
     .chart{
       position: relative;
       margin: 0px 10px;
@@ -177,8 +194,9 @@ p{ margin: 5px 0px; }
       background-size: cover;
     }
     .chart-tag{
+      padding-top: 8px;
       text-align: center;
-      .name{ color: #255ABB; }
+      .name{ color: #255ABB; font-size: 15px; }
     }
   }
 

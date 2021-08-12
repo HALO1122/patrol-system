@@ -61,7 +61,13 @@ export default {
   data() {
     return {
       chart: null,
-      count: ''
+      count: {
+        online_number: 0,
+        no_login_number: 0,
+        achieve_number: 0,
+        login_percent: 0,
+        no_login_percent: 0
+      }
     }
   },
   computed: {

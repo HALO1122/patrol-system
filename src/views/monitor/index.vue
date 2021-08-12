@@ -33,10 +33,16 @@ import EntryMonitor from './components/EntryMonitor'
 import Abnormal from './components/Abnormal'
 import SigninStatistic from './components/SigninStatistic'
 import MapStatistic from './components/MapStatistic'
+import { openSocket } from '@/utils/connecSocket'
+
 export default {
   name: 'LineChart',
   components: { EntryOnline, EntryStatus, Abnormal,
-    SigninStatistic, MapStatistic, EntryMonitor }
+    SigninStatistic, MapStatistic, EntryMonitor },
+
+  mounted() {
+    openSocket()
+  }
 }
 </script>
 
