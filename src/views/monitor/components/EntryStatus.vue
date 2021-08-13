@@ -107,7 +107,7 @@ export default {
           {
             name: '考生状态统计',
             type: 'pie',
-            radius: ['40%', '80%'],
+            radius: ['40%', '70%'],
             avoidLabelOverlap: false,
             label: {
               alignTo: 'edge',

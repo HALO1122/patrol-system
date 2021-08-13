@@ -5,7 +5,29 @@
       <span class="ml10">考生分布热度统计</span>
     </div>
     <div class="city-list">
-      列表数据
+      <el-table
+        :data="tableData"
+        :cell-style="tableCellStyle"
+        :header-cell-style="{background:'#0C2056',color:'#357FFA',border:'none'}"
+      >
+        <el-table-column
+          type="index"
+          label="排名"
+          align="center"
+          width="80"
+        />
+        <el-table-column
+          prop="name"
+          label="地区"
+          align="center"
+          width="80"
+        />
+        <el-table-column
+          prop="num"
+          align="center"
+          label="开考人数"
+        />
+      </el-table>
     </div>
     <div class="wrap-map">
       <div ref="chinaMap" class="chart-map" />
@@ -16,23 +38,20 @@
 <script>
 import echarts from 'echarts'
 import '../../../../node_modules/echarts/map/js/china.js' // 引入中国地图数据
+import { EntryArea } from '@/utils/api'
+
 export default {
   name: 'ChinaMap',
   props: ['userJson'],
   data() {
     return {
       chart: null,
-      geoCoordMap: {
-        '辽宁省': [121.62, 38.92],
-        '海南省': [109.511909, 18.252847],
-        '湖南省': [110.479191, 29.117096],
-        '江苏省': [120.29, 31.59],
-        '河南省': [114.35, 34.79]
-      }
+      tableData: [],
+      mapData: []
     }
   },
   mounted() {
-    this.chinaConfigure()
+    this.getEntryArea()
   },
   beforeDestroy() {
     if (!this.chart) {
@@ -42,34 +61,52 @@ export default {
     this.chart = null
   },
   methods: {
-    convertData(data) {
-      var res = []
-      for (var i = 0; i < data.length; i++) {
-        var geoCoord = this.geoCoordMap[data[i].name]
-        if (geoCoord) {
-          res.push({
-            name: data[i].name,
-            value: geoCoord.concat(data[i].value)
-          })
-        }
+    async getEntryArea() {
+      const res = await EntryArea()
+      if (res.result.length !== 0) {
+        this.handelAreaData(res.result)
+        this.mapData = res.result
       }
-      console.log(res, 'res')
-      return res
+      this.chinaConfigure(res.result)
     },
-    chinaConfigure() {
+    handelAreaData(item) {
+      for (let i = 0, len = item.length; i < len; i++) {
+        this.tableData.push({ name: item[i].name, num: item[i].value[2] })
+      }
+      this.tableData.sort(this.compare('num'))
+    },
+    // 数组排序
+    compare(property) {
+      return function(a, b) {
+        const value1 = a[property]
+        const value2 = b[property]
+        return value2 - value1
+      }
+    },
+    // table表格样式设置
+    tableCellStyle({ row, column, rowIndex, columnIndex }) {
+      if (rowIndex % 2 === 0) {
+        return { background: '#061746', color: '#E7E9EF', borderBottom: '#061746' }
+      } else {
+        return { background: '#0C2056', color: '#E7E9EF', borderBottom: '#0C2056' }
+      }
+    },
+    chinaConfigure(mapData) {
       const chinaMap = echarts.init(this.$refs.chinaMap)
       window.onresize = chinaMap.resize
+
+      console.log(mapData, 'this.mapData')
       chinaMap.setOption({
         backgroundColor: '#071846',
-        visualMap: {
-          show: false,
-          min: 0,
-          max: 1000,
-          text: ['High', 'Low'],
-          realtime: true,
-          calculable: true,
-          color: ['#02F6F9', '#02F6F9', '#02F6F9']
-        },
+        // visualMap: {
+        //   show: false,
+        //   min: 0,
+        //   max: 1000,
+        //   text: ['High', 'Low'],
+        //   realtime: true,
+        //   calculable: true,
+        //   color: ['#02F6F9', '#02F6F9', '#02F6F9']
+        // },
         geo: {
           map: 'china',
           roam: false,
@@ -100,18 +137,74 @@ export default {
             }
           }
         },
+        visualMap: {
+          type: 'piecewise',
+          realtime: false,
+          calculable: true,
+          inRange: {
+            color: ['#02F6F9', '#02F6F9', '#02F6F9']
+          },
+          pieces: [{
+            min: 0,
+            max: 100000,
+            label: ' ',
+            color: {
+              type: 'linear',
+              x: 0,
+              y: 0,
+              x2: 0,
+              y2: 1,
+              colorStops: [{
+                offset: 0,
+                color: 'rgba(3, 232, 239, 0.5)' // 0% 处的颜色
+              }, {
+                offset: 0.6,
+                color: 'rgba(22,159,156,0)'
+              }, {
+                offset: 1,
+                color: 'rgba(3, 232, 239, 1)' // 100% 处的颜色
+              }],
+              globalCoord: false // 缺省为 false
+            }
+          }],
+          show: false,
+          textStyle: {
+            color: '#ffffff',
+            fontSize: 16
+          }
+        },
         series: [
           {
             type: 'scatter',
             coordinateSystem: 'geo',
+            symbol: 'circle',
             symbolSize: function(val) {
               return val[2] / 10
             },
             label: {
               normal: {
-                formatter: '{b}',
-                position: 'right',
-                show: false
+                show: true,
+                color: '#fff',
+                fontWeight: 'normal',
+                position: 'inside',
+                formatter: function(para) {
+                  if (para.data.value[2] > 1000) {
+                    return '{txtFontsize|' + para.data.name + '}' + '{cnNum|' + para.data.value[2] + '}'
+                  } else {
+                    return ''
+                  }
+                },
+                rich: {
+                  cnNum: {
+                    fontSize: 12,
+                    fontWeight: 'normal',
+                    color: '#fff'
+                  },
+                  txtFontsize: {
+                    fontSize: 14,
+                    color: '#02F6F9'
+                  }
+                }
               },
               emphasis: {
                 show: true
@@ -123,14 +216,7 @@ export default {
                 color: '#fff'
               }
             },
-            data: this.convertData([
-              { name: '河南省', value: 110 },
-              { name: '江苏省', value: 110 },
-              { name: '海南省', value: 110 },
-              { name: '辽宁省', value: 210 },
-              { name: '湖南省', value: 210 },
-              { name: '新疆', value: 210 }
-            ])
+            data: mapData
           }]
       })
     }
@@ -141,6 +227,9 @@ export default {
 <style lang="scss" scoped>
 $bg-color: #061748;
 $tag-color: #3682FF;
+.el-table::before {
+  height: 0px;
+}
 .chinaMap{
   width: 100%;
   padding: 10px 20px 20px;
@@ -148,9 +237,12 @@ $tag-color: #3682FF;
   box-shadow: inset 0px 0px 6px rgba(34, 124, 171, 0.8);
   background-color: $bg-color;
   .city-list{
+    width: 30%;
+    margin: 20px 0px;
     float: left;
-    border: 1px solid $tag-color;
+    border: 1px solid #183473;
     height: 500px;
+    overflow-y: auto;
   }
   .wrap-map{
     float: right;

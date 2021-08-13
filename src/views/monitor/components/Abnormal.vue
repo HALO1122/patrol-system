@@ -5,8 +5,8 @@
       <span class="ml10">重点异常警报</span>
     </div>
     <div class="chart-title pt10">
-      <span class="people">人数</span>
-      <span class="frequency pl5">次数</span>
+      <div class="people"><p class="square" /><span>人数</span></div>
+      <div class="frequency pl10"><p class="square" /><span>次数</span></div>
     </div>
     <div id="abnormal" :style="{height:height,width:width}" />
   </div>
@@ -25,17 +25,28 @@ export default {
     },
     height: {
       type: String,
-      default: '90%'
+      default: '85%'
     }
   },
   data() {
     return {
       chart: null,
-      type: {}
+      type: [
+        { type: '5', number: 0, count: 0 },
+        { type: '2', number: 0, count: 0 },
+        { type: '9', number: 0, count: 0 },
+        { type: '8', number: 0, count: 0 },
+        { type: '3', number: 0, count: 0 },
+        { type: '13', number: 0, count: 0 },
+        { type: '12', number: 0, count: 0 },
+        { type: '4', number: 0, count: 0 }
+      ],
+      typeList: [],
+      numberList: [],
+      countList: []
     }
   },
   mounted() {
-    this.initChart()
     this.getAbnormalType()
   },
   beforeDestroy() {
@@ -47,11 +58,19 @@ export default {
   },
   methods: {
     async getAbnormalType() {
+      let typeData = null
       const res = await abnormalType()
-      console.log(res, 'type---res')
+      if (res.result.length === 0) {
+        typeData = this.type
+      } else {
+        typeData = res.result
+      }
+      this.initChart(typeData)
     },
-    initChart() {
+    initChart(data) {
       this.chart = echarts.init(document.getElementById('abnormal'))
+      this.handelTypeList(data)
+
       this.chart.setOption({
         backgroundColor: '#061748',
         title: {
@@ -76,7 +95,7 @@ export default {
         },
         yAxis: {
           type: 'category',
-          data: ['签到异常', '偏离监控', '佩戴耳机', '翻阅数据', '出现他人', '拍摄屏幕', '使用手机', '打电话'],
+          data: this.typeList,
           axisLabel: {
             interval: 0, // 设置为 1，表示『隔一个标签显示一个标签』
             margin: 20,
@@ -103,7 +122,7 @@ export default {
           {
             name: '人数',
             type: 'bar',
-            data: [1, 0, 4, 6, 2, 1, 3, 0],
+            data: this.numberList,
             barWidth: 6, // 柱子宽度
             itemStyle: {
               normal: {
@@ -122,7 +141,7 @@ export default {
             name: '次数',
             type: 'bar',
             barWidth: 6, // 柱子宽度
-            data: [2, 1, 3, 4, 2, 1, 6, 1],
+            data: this.countList,
             itemStyle: {
               normal: {
                 color: '#3682FF',
@@ -138,6 +157,52 @@ export default {
           }
         ]
       })
+    },
+    handelTypeList(data) {
+      data.map(item => {
+        this.typeList.push(this.monitorCode(item.type))
+        this.numberList.push(item.number)
+        this.countList.push(item.count)
+      })
+    },
+    monitorCode(code) {
+      console.log(code, 'code')
+      switch (code) {
+        case '-1':
+          return '其他'
+        case '0':
+          return '正常'
+        case '1':
+          return '替考'
+        case '2':
+          return '偏离监控'
+        case '3':
+          return '出现他人'
+        case '4':
+          return '打电话'
+        case '5':
+          return '签到异常'
+        case '6':
+          return '与他人交谈'
+        case '7':
+          return '使用计算器'
+        case '8':
+          return '翻阅资料'
+        case '9':
+          return '佩戴耳机'
+        case '10':
+          return '戴口罩、墨镜、帽子等遮挡面部'
+        case '11':
+          return '视频通话异常截图'
+        case '12':
+          return '使用手机'
+        case '13':
+          return '拍摄屏幕'
+        case '14':
+          return '出现与考试相关的音频内容'
+        case '15':
+          return '离座'
+      }
     }
   }
 }
@@ -145,7 +210,8 @@ export default {
 
 <style lang="scss" scoped>
 $bg-color: #061748;
-$tag-color: #3682FF;
+$tag1-color: #3682FF;
+$tag2-color: #02F6F9;
 .abnormal{
   padding: 10px 20px;
   // height: calc(100vh - 84px);
@@ -154,23 +220,23 @@ $tag-color: #3682FF;
   box-shadow: inset 0px 0px 6px rgba(34, 124, 171, 0.8);
   background-color: $bg-color;
   .chart-title{
-    float: right;
+    display: flex;
+    justify-content: flex-end;
     margin-right: 20px;
+    font-size: 12px;
+    .square{
+      margin: 5px 8px 0px;
+      width: 8px;
+      height: 8px;
+    }
+    div{ display: flex; }
     .people{
-      color: #02F6F9;
-      &::before{
-        width: 8px;
-        height: 8px;
-        background-color: #02F6F9;
-      }
+      color: $tag2-color;
+      .square { background-color: $tag2-color; }
     }
     .frequency{
-      color: $tag-color;
-      &::before{
-        width: 8px;
-        height: 8px;
-        background-color: $tag-color;
-      }
+      color: $tag1-color;
+      .square { background-color: $tag1-color; }
     }
   }
 }

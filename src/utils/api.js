@@ -17,6 +17,14 @@ export function PatrolLogin(data) {
   })
 }
 
+// 考试列表
+export function getSessions() {
+  return request({
+    url: '/patrol/sessions/',
+    method: 'get'
+  })
+}
+
 // 考生状态
 export function EntryStatus() {
   return request({
@@ -57,3 +65,10 @@ export function teacherInfo() {
   })
 }
 
+// 考生热度统计
+export function EntryArea() {
+  return request({
+    url: '/patrol/session/' + sessionId + '/area/',
+    method: 'get'
+  })
+}

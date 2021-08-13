@@ -21,23 +21,70 @@
       <p class="txt-18 txt-bold">我的考试</p>
       <div v-for="(session, index) in sessions" :key="index" class="exam-list-item" :status="session.status">
         <div class="exam-title">
-          <h3>{{ session.name }}</h3>
-          <p class="exam-list-time">{{ session.start }} - {{ session.end }}</p>
+          <h3 v-html="session.name" />
+          <div class="exam-time">
+            <span class="exam-list-time">{{ formatTime(session.start) }} - {{ formatTime(session.end) }}</span>
+            <span v-if="session.early !== -1" class="exam-login-time">提前登录{{ session.early }}分钟</span>
+            <span v-if="session.later !== -1" class="exam-login-time">限制迟到{{ session.later }}分钟</span>
+          </div>
           <div class="exam-config mt20">
-            <i class="ez-icon">&#xe73b;</i>
-            <i class="ez-icon">&#xe73e;</i>
-            <i class="ez-icon">&#xe958;</i>
-            <i class="ez-icon">&#xe813;</i>
-            <i class="ez-icon">&#xe742;</i>
-            <i class="ez-icon">&#xe741;</i>
+            <!-- 在线客服 -->
+            <i v-if="session.customer_service" class="ez-icon">&#xe647;</i>
+            <!-- 即报既考 -->
+            <i v-if="session.allow_anonymous" class="ez-icon">&#xe73b;</i>
+            <!-- 限定登录 -->
+            <i v-if="session.ip_white_list" class="ez-icon">&#xe944;</i>
+            <!-- 练习模式 -->
+            <i v-if="session.practice_mode" class="ez-icon">&#xe7ab;</i>
+            <!-- 考试承诺书 -->
+            <i v-if="session.nda" class="ez-icon">&#xe81b;</i>
+            <!-- 资料审核 -->
+            <i v-if="session.entry_review" class="ez-icon">&#xe95f;</i>
+            <!-- 视频监控 -->
+            <i v-if="session.monitor" class="ez-icon">&#xe73e;</i>
+            <!-- 声音监控 -->
+            <i v-if="session.audio_monitor" class="ez-icon">&#xe958;</i>
+            <!-- 视频录制 -->
+            <i v-if="session.save_video" class="ez-icon">&#xe64a;</i>
+            <!-- 登录验证 -->
+            <i v-if="session.face_detection" class="ez-icon">&#xe7e0;</i>
+            <!-- 人脸侦测 -->
+            <i v-if="session.face_detection_dur" class="ez-icon">&#xe7e2;</i>
+            <!-- 鹰眼监控 -->
+            <i v-if="session.eagle_eye" class="ez-icon">&#xe813;</i>
+            <!-- 人脸识别 -->
+            <!-- <i class="ez-icon">&#xe742;</i> -->
+            <!-- 锁定考试 -->
+            <i v-if="session.lock_screen" class="ez-icon">&#xe741;</i>
+            <!-- 客户端考试 -->
+            <!-- <i class="ez-icon">&#xe942;</i> -->
+            <!-- 网页考试 -->
+            <!-- <i class="ez-icon">&#xe941;</i> -->
+            <!-- 人工判分 -->
+            <i v-if="session.manual_score" class="ez-icon">&#xe750;</i>
+            <!-- 查看成绩 -->
+            <i v-if="session.public_score" class="ez-icon">&#xe744;</i>
+            <!-- 查看得分详情 -->
+            <i v-if="session.show_score_detail" class="ez-icon">&#xe948;</i>
+            <!-- 不满意重做 -->
+            <i v-if="session.re_answer" class="ez-icon">&#xe949;</i>
+            <!-- 重做保留最高分 -->
+            <i v-if="session.answer_save_high" class="ez-icon">&#xe94a;</i>
+            <!-- 成绩通知 -->
+            <i v-if="session.send_result_email" class="ez-icon">&#xe753;</i>
+            <!-- 分数线 -->
+            <i v-if="session.datum_line" class="ez-icon">&#xe74f;</i>
+            <!-- 答题水印 -->
+            <!-- <i class="ez-icon">&#xe955;</i> -->
+
           </div>
         </div>
         <div class="exam-count">
           <p class="exam-monitor pointer" @click="enterMonitor"><i class="ez-icon">&#xe67c;</i><span class="ml5 txt-14">实时监控</span></p>
           <div class="student-count">
-            <span class="num">在线<br><span class="ongoing-num">{{ session.ongoing_entries }}</span></span>
-            <span class="num">完成<br><span class="completed-num">{{ session.completed_entries }}</span></span>
-            <span class="num">总数<br><span class="total-num">{{ session.entries_num }}</span></span>
+            <span class="num">在线<br><span class="ongoing-num">{{ session.online }}</span></span>
+            <span class="num">完成<br><span class="completed-num">{{ session.completed }}</span></span>
+            <span class="num">总数<br><span class="total-num">{{ session.all }}</span></span>
           </div>
         </div>
       </div>
@@ -46,6 +93,8 @@
 </template>
 
 <script>
+import { getSessions } from '@/utils/api'
+import { parseTime } from '@/utils/index'
 
 export default {
   data() {
@@ -83,10 +132,23 @@ export default {
       ]
     }
   },
+  mounted() {
+    this.getSessions()
+  },
   methods: {
+    async getSessions() {
+      const res = await getSessions()
+      if (res.result.length !== 0) {
+        this.sessions = res.result
+        console.log(parseTime(this.sessions[0].start, '{y}-{m}-{d} {h}:{i}'), '****')
+      }
+    },
+    formatTime(time) {
+      return parseTime(time, '{y}-{m}-{d} {h}:{i}')
+    },
     async logout() {
       await this.$store.dispatch('user/logout')
-      this.$router.push(`/login`)
+      this.$router.push(`/`)
     },
     enterMonitor() {
       this.$router.push(`/monitor`)
@@ -99,6 +161,7 @@ export default {
 .list{
   background: #F1F2F6;
   height: 100%;
+  overflow-y: auto;
   .nav-menu {
     background: #fff;
     display: flex;
@@ -133,10 +196,19 @@ export default {
       box-shadow: 1px 1px 4px 2px rgb(217 222 234 / 30%);
       display: flex;
       justify-content: space-between;
-      .exam-list-time{
+      .exam-time{
         font-size: 14px;
-        color: #999;
-        display: inline-block;
+        .exam-list-time{
+          color: #999;
+          display: inline-block;
+        }
+        .exam-login-time{
+          border-radius: 6px;
+          padding: 4px 6px;
+          margin-left: 16px;
+          background-color: #E7F0FF;
+          color: #166EFF;
+        }
       }
       .exam-config{
         i{
