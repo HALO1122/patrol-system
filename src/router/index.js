@@ -24,11 +24,6 @@ export const constantRoutes = [
     hidden: true
   },
   {
-    path: '/404',
-    component: () => import('@/views/error-page/404'),
-    hidden: true
-  },
-  {
     path: '/dashboard',
     component: Layout,
     children: [
@@ -89,27 +84,7 @@ export const asyncRoutes = [
     ]
   },
   /** when your routing map is too long, you can split it into small modules **/
-  chartsRouter,
-  {
-    path: '/error',
-    component: Layout,
-    redirect: 'noRedirect',
-    name: 'ErrorPages',
-    meta: {
-      title: 'Error Pages',
-      icon: '404'
-    },
-    children: [
-      {
-        path: '404',
-        component: () => import('@/views/error-page/404'),
-        name: 'Page404',
-        meta: { title: '404', noCache: true }
-      }
-    ]
-  },
-  // 404 page must be placed at the end !!!
-  { path: '*', redirect: '/404', hidden: true }
+  chartsRouter
 ]
 
 const createRouter = () => new Router({

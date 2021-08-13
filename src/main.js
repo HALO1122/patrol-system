@@ -6,7 +6,6 @@ import Cookies from 'js-cookie'
 import Element from 'element-ui'
 import './styles/element-variables.scss'
 import '@/styles/index.scss' // global css
-import './utils/error-log' // error log
 import * as filters from './filters' // global filters
 // echart图表组件
 import echarts from 'echarts'

@@ -19,12 +19,6 @@ const chartsRouter = {
       meta: { title: 'Mix Chart', noCache: true }
     },
     {
-      path: 'china-map',
-      component: () => import('@/views/charts/china-map'),
-      name: 'ChinaMap',
-      meta: { title: 'China Map', noCache: true }
-    },
-    {
       path: 'word-map',
       component: () => import('@/views/charts/word-map'),
       name: 'WordMap',
