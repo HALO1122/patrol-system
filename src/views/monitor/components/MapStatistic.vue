@@ -84,7 +84,7 @@ export default {
       }
     },
     // table表格样式设置
-    tableCellStyle({ row, column, rowIndex, columnIndex }) {
+    tableCellStyle({ rowIndex }) {
       if (rowIndex % 2 === 0) {
         return { background: '#061746', color: '#E7E9EF', borderBottom: '#061746' }
       } else {
@@ -95,7 +95,6 @@ export default {
       const chinaMap = echarts.init(this.$refs.chinaMap)
       window.onresize = chinaMap.resize
 
-      console.log(mapData, 'this.mapData')
       chinaMap.setOption({
         backgroundColor: '#071846',
         // visualMap: {
@@ -230,8 +229,12 @@ $tag-color: #3682FF;
 .el-table::before {
   height: 0px;
 }
+.el-table, .el-table__empty-block{
+  background-color: $bg-color !important;
+}
 .chinaMap{
   width: 100%;
+  height: 67%;
   padding: 10px 20px 20px;
   border: 1px solid #257098;
   box-shadow: inset 0px 0px 6px rgba(34, 124, 171, 0.8);
@@ -241,7 +244,7 @@ $tag-color: #3682FF;
     margin: 20px 0px;
     float: left;
     border: 1px solid #183473;
-    height: 500px;
+    height: 460px;
     overflow-y: auto;
   }
   .wrap-map{

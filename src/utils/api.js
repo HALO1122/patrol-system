@@ -1,13 +1,15 @@
 import request from '@/utils/request'
+import store from '@/store'
 
-var tenantId = ''; var sessionId = 50745
-if (document.URL.indexOf('session') !== -1) {
-  tenantId = document.URL.replace('"', '').split('session')[1].split('/')[1]
+var tenantId = ''
+if (document.URL.indexOf('prtrol') !== -1) {
+  tenantId = document.URL.replace('"', '').split('prtrol')[1].split('/')[1]
 } else {
   tenantId = 85
 }
 console.log(tenantId, 'tenantId')
 
+const sessionId = store.getters.sessionId
 // 登录接口
 export function PatrolLogin(data) {
   return request({

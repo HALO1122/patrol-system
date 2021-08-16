@@ -166,7 +166,6 @@ export default {
       })
     },
     monitorCode(code) {
-      console.log(code, 'code')
       switch (code) {
         case '-1':
           return '其他'

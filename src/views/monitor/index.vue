@@ -1,7 +1,11 @@
 <template>
   <div class="monitor">
-    <h2>易考在线考试监控平台</h2>
-    <div class="content mt10">
+    <div class="header">
+      <p class="header-menu" />
+      <h2>易考在线考试监控平台</h2>
+      <p class="header-time" @click="refreshMonitor()">{{ formatTime(curTime) }}</p>
+    </div>
+    <div class="content">
       <el-row>
         <el-col :span="6">
           <div class="wrap-content">
@@ -34,14 +38,27 @@ import Abnormal from './components/Abnormal'
 import SigninStatistic from './components/SigninStatistic'
 import MapStatistic from './components/MapStatistic'
 import { openSocket } from '@/utils/connecSocket'
+import { parseTime } from '@/utils/index'
 
 export default {
   name: 'LineChart',
   components: { EntryOnline, EntryStatus, Abnormal,
     SigninStatistic, MapStatistic, EntryMonitor },
-
+  data() {
+    return {
+      curTime: new Date()
+    }
+  },
   mounted() {
     openSocket()
+  },
+  methods: {
+    formatTime(time) {
+      return parseTime(time, '{y}-{m}-{d} {h}:{i}')
+    },
+    refreshMonitor() {
+      location.reload()
+    }
   }
 }
 </script>
@@ -49,13 +66,30 @@ export default {
 <style lang="scss" scoped>
 .monitor{
   height: 100%;
+  overflow: hidden;
   background: url('../../assets/images/index-bg.jpg') no-repeat;
   background-size: cover;
   color: #fff;
-  h2{
+  .header{
+    display: flex;
+    justify-content: space-between;
     margin: 0;
     text-align: center;
-    padding-top: 30px;
+    padding: 10px 40px 0px;
+    h2 { padding-left: 8%; }
+    .header-time{
+      background: url('../../assets/images/refresh.png') no-repeat 0px -2px;
+      background-size: 24px 24px;
+      padding-left: 50px;
+      cursor: pointer;
+    }
+    .header-menu{
+      width: 24px;
+      height: 24px;
+      cursor: pointer;
+      background: url('../../assets/images/menu.png') no-repeat 0px -2px;
+      background-size: 24px 24px;
+    }
   }
   .content{
     height: 92%;

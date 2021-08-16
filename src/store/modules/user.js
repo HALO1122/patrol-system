@@ -1,7 +1,8 @@
 const state = {
   token: '',
   name: '',
-  scoket: ''
+  scoket: '',
+  sessionId: ''
 }
 
 const mutations = {
@@ -13,6 +14,9 @@ const mutations = {
   },
   SET_SOCKET: (state, scoket) => {
     state.scoket = scoket
+  },
+  SET_SESSIONID: (state, sessionId) => {
+    state.sessionId = sessionId
   }
 }
 
@@ -22,6 +26,9 @@ const actions = {
   },
   scoket({ commit }, scoket) {
     commit('SET_SOCKET', scoket)
+  },
+  sessionId({ commit }, sessionId) {
+    commit('SET_SESSIONID', sessionId)
   }
 }
 

@@ -1,7 +1,7 @@
 <template>
   <div class="single-entry">
     <video ref="entry_video" class="entry-video" src="" muted autoplay playsinline />
-    <p class="entry-abnormal">有异常</p>
+    <p v-if="singleItem.monitor_photo_count !== 0" class="entry-abnormal">有异常</p>
     <div class="entry-name">
       <span>{{ singleItem.full_name }}</span>
       <span class="pl10">{{ singleItem.permit }}</span>

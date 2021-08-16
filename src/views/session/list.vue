@@ -2,14 +2,12 @@
   <div class="list">
     <div class="nav-menu">
       <div class="nav-logo">
-        <!-- <img class="logo-img" src="../../assets/images/logo.png" alt="logo" width="24px">         -->
         <span>巡考系统</span>
       </div>
       <el-dropdown class="avatar-container hover-effect" trigger="click">
         <div class="avatar-wrapper">
-          <!-- <img :src="avatar" class="user-avatar"> -->
-          <img src="https://trello-members.s3.amazonaws.com/5e65bf9e2d1d277d0f474e56/a39e9b76cb386426b24e233d9dbe9798/170.png" class="user-avatar">
-          <span class="ml10">李雨欣</span>
+          <!-- <img src="" class="user-avatar"> -->
+          <span class="ml10">退出系统</span>
           <i class="el-icon-caret-bottom" />
         </div>
         <el-dropdown-menu slot="dropdown">
@@ -80,7 +78,7 @@
           </div>
         </div>
         <div class="exam-count">
-          <p class="exam-monitor pointer" @click="enterMonitor"><i class="ez-icon">&#xe67c;</i><span class="ml5 txt-14">实时监控</span></p>
+          <p :id="session.id" class="exam-monitor pointer" @click="enterMonitor(session.id)"><i class="ez-icon">&#xe67c;</i><span class="ml5 txt-14">实时监控</span></p>
           <div class="student-count">
             <span class="num">在线<br><span class="ongoing-num">{{ session.online }}</span></span>
             <span class="num">完成<br><span class="completed-num">{{ session.completed }}</span></span>
@@ -150,8 +148,10 @@ export default {
       await this.$store.dispatch('user/logout')
       this.$router.push(`/`)
     },
-    enterMonitor() {
-      this.$router.push(`/monitor`)
+    enterMonitor(id) {
+      const sessionId = id
+      this.$store.commit('SET_SESSIONID', id)
+      this.$router.push(`/monitor?sid=` + sessionId)
     }
   }
 }

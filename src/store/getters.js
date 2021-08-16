@@ -7,6 +7,7 @@ const getters = {
   token: state => state.user.token,
   name: state => state.user.name,
   scoket: state => state.user.scoket,
+  sessionId: state => state.user.sessionId,
   permission_routes: state => state.permission.routes
 }
 export default getters
